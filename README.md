@@ -9,9 +9,6 @@ docker run --rm --name web --volume "$(pwd)/trackingCoinsVue:/app" -it node:late
 ## Other
 
 ```bahs
-# Change credentials
-docker-compose run app bundle exec rails credentials:edit
-
 # Remove directory
 rm -rf mydir
 
@@ -20,6 +17,14 @@ cp /var/www/coins/nginx.conf .
 
 # Copy directory
 cp -r /var/www/coins/site/letsencrypt/ .
+```
+
+Run docker
+
+```bash
+sudo systemctl enable docker
+sudo systemctl start docker
+sudo systemctl status docker
 ```
 
 ## Docker clean
@@ -43,8 +48,8 @@ docker system prune -a
 
 ```bash
 docker-compose build
-docker-compose run app bash -c 'bundle check || bundle install --clean'
-docker-compose run app bundle exec rails db:create db:migrate db:seed
+docker-compose run app bash -c 'cd $APP_DIR && npx sequelize db:migrate'
+docker-compose run app bash -c 'cd $APP_DIR && && npx sequelize db:seed:all'
 ```
 
 ## Additional command
@@ -56,27 +61,20 @@ docker-compose down
 docker-compose run app bash
 ```
 
-## Size volume
+## Volume
 
 ```bash
+# Size volume
 du --human-readable --summarize $(docker volume inspect --format '{{ .Mountpoint }}' <volume_name>)
-```
 
-## Size folder
-
-```bash
+# Size folder
 du -x --human-readable  --max-depth=1 /
-```
 
-## Size file
-
-```bash
+# Size file
 ls -l --human-readable
-```
 
-## List free disk space
+# List free disk space
 
-```bash
 df --human-readable
 ```
 
@@ -115,7 +113,7 @@ docker run \
 ## Create service file
 
 ```bash
-vim /lib/systemd/system/coins.service
+vim /lib/systemd/system/coffee-print.service
 ```
 
 ```txt
@@ -127,7 +125,7 @@ Conflicts=shutdown.target reboot.target halt.target
 [Service]
 Restart=always
 RestartSec=10
-WorkingDirectory=/root/trackingCoins
+WorkingDirectory=/root/coffee-print/coffee-print-docker
 ExecStart=/usr/local/bin/docker-compose up
 ExecStop=/usr/local/bin/docker-compose down
 LimitNOFILE=infinity
@@ -143,124 +141,44 @@ NotifyAccess=all
 WantedBy=multi-user.target
 ```
 
-Run docker
-
-```bash
-sudo systemctl enable docker
-sudo systemctl start docker
-sudo systemctl status docker
-```
-
 Run docker-compose project
 
 ```bash
 sudo systemctl daemon-reload
-sudo systemctl enable coins
-sudo systemctl start coins
-sudo systemctl status coins
-sudo systemctl restart coins
+sudo systemctl enable coffee-print
+sudo systemctl start coffee-print
+sudo systemctl status coffee-print
+sudo systemctl restart coffee-print
 ```
 
 ## Docker certbot
 
-Add certificate
-
 ```bash
-sudo docker run --rm \
+# Add certificate
+sudo docker run \
+  --rm \
   --name certbot \
-  --volume "$(pwd)/letsencrypt:/etc/letsencrypt" \
+  --volume "$(pwd)/certbot/conf:/etc/letsencrypt" \
+  --volume "$(pwd)/certbot/www:/var/www/certbot" \
   certbot/certbot certonly \
+  --non-interactive \
   --webroot \
   --agree-tos \
   --manual-public-ip-logging-ok \
   --domains domain.name \
   --email example@example.com \
-  --webroot-path /etc/letsencrypt
-```
+  --webroot-path /var/www/certbot
 
-Update certificate
-
-```bash
-sudo docker run --rm --name certbot --volume "/root/trackingCoins/letsencrypt:/etc/letsencrypt" certbot/certbot renew
-```
-
-## nginx.conf
-
-```txt
-# disable when not https
-ssl_certificate ssl/coins/live/cryptonot.io/fullchain.pem;
-ssl_certificate_key ssl/coins/live/cryptonot.io/privkey.pem;
-
-server {
-  listen 80;
-  listen [::]:80; #Added IPv6 here too
-
-  # for certbot
-  location ^~ /.well-known/acme-challenge/ {
-    root /etc/nginx/ssl/coins;
-  }
-
-  location / {
-    return 301 https://my.cryptonot.io$request_uri;
-  }
-}
-
-server {
-  listen 8090 ssl;
-  listen [::]:8090 ssl;
-
-  # for telegram bot
-  listen 8443 ssl;
-
-  location / {
-    proxy_pass http://app:8080;
-  }
-}
-
-server {
-  listen 443 ssl;
-  listen [::]:443 ssl;
-
-  root /var/www/coins;
-
-  # for SPA
-  location / {
-    try_files $uri $uri/ /index.html;
-  }
-}
+# Update certificate
+sudo docker run \
+  --rm \
+  --name certbot \
+  --volume "/root/coffee-print/coffee-print-docker/certbot/conf:/etc/letsencrypt" \
+  --volume "/root/coffee-print/coffee-print-docker/certbot/www:/var/www/certbot" \
+  certbot/certbot renew
 ```
 
 ## Add to cron *certbot_renew.sh*. Readme inside file
-
-## Telegram bot
-
-For more information, see:
-<https://www.rubydoc.info/gems/telegram-bot/0.4.2>
-<https://github.com/telegram-bot-rb/telegram-bot>
-
-### Add row in /config/environments/production.rb
-
-```ruby
-routes.default_url_options = { host: ENV['TELEGRAM_BOT_HOST_PORT'], protocol: :https }
-```
-
-### Add file /config/initializers/telegram_bot.rb
-
-```ruby
-Telegram.bots_config = { default: ENV['TELEGRAM_BOT_TOKEN'] }
-```
-
-### Setup webhooks, check after setup <https://api.telegram.org/bot[TOKEN]/getWebhookInfo>
-
-```bash
-docker-compose run app bundle exec rake telegram:bot:set_webhook RAILS_ENV=production
-```
-
-### Run bot for test - poller-mode
-
-```bash
-docker-compose run app bundle exec rake telegram:bot:poller
-```
 
 ## Vue Build dist
 

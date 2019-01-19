@@ -1,3 +1,5 @@
+/letsencrypt
+
 .env
 nginx.conf
 
