@@ -1,6 +1,4 @@
 /letsencrypt
 
 .env
-nginx.conf
-
 .travis/id_rsa
