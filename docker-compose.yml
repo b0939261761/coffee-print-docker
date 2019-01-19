@@ -28,8 +28,7 @@ services:
       POSTGRES_PORT: $POSTGRES_PORT
 
   nginx:
-    # image: nginx:1.15.8-alpine
-    image: nginx:1.15.8
+    image: nginx:1.15.8-alpine
     depends_on:
       - app
     volumes:
