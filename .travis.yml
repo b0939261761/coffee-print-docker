@@ -19,7 +19,7 @@ before_install:
   - echo -e "Host $SSH_HOST\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
   - ssh-keyscan $SSH_HOST >> ~/.ssh/known_hosts
   - ssh-add ./.travis/id_rsa
-  - openssl aes-256-cbc -k $env_file_key -in .env.enc -out .env -d
+  - openssl aes-256-cbc -k $env_file_key -in ./.env.enc -out ./.env -d
 
 install: false
 
