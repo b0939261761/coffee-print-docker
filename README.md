@@ -240,5 +240,6 @@ travis login --org
 #!/bin/sh
 
 openssl aes-256-cbc -k "<key>" -in .env -out .env.enc
+git add ./.env.enc
 echo "pre-commit - File '.env.enc' done"
 ```
