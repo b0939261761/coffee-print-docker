@@ -141,12 +141,12 @@ NotifyAccess=all
 WantedBy=multi-user.target
 ```
 
-Run docker-compose project
-
 ```bash
+# Run docker-compose project
 sudo systemctl daemon-reload
 sudo systemctl enable coffee-print
 sudo systemctl start coffee-print
+
 sudo systemctl status coffee-print
 sudo systemctl restart coffee-print
 ```
