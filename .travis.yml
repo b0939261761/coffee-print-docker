@@ -2,6 +2,7 @@ language: node_js
 env:
   SSH_USER: root
   APP_PATH: /root/coffee-print/coffee-print-docker
+  SERVICE_NAME: coffee-print
 
 sudo: false
 
@@ -30,7 +31,9 @@ deploy:
   skip_cleanup: true
   script: bash -c '
     rsync ./{docker-compose.yml,nginx.conf,.env.enc} $SSH_USER@$SSH_HOST:$APP_PATH/
-    && openssl aes-256-cbc -k $env_file_key -in ./.env.enc -out ./.env -d
-    && ssh root@$SSH_HOST "systemctl restart coffee-print"'
+    && ssh $SSH_USER@$SSH_HOST "
+      openssl aes-256-cbc -k $env_file_key -in $APP_PATH/.env.enc -out $APP_PATH/.env -d
+      && rm -rf $APP_PATH/.env.enc
+      && systemctl restart $SERVICE_NAME"'
   on:
     branch: master
