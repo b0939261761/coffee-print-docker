@@ -19,7 +19,7 @@ before_install:
   - echo -e "Host $SSH_HOST\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
   - ssh-keyscan $SSH_HOST >> ~/.ssh/known_hosts
   - ssh-add ./.travis/id_rsa
-  - openssl aes-256-cbc -k $env_file_key -in ./.env.enc -out ./.env -d
+  # - openssl aes-256-cbc -k $env_file_key -in ./.env.enc -out ./.env -d
 
 install: true
 
@@ -30,7 +30,7 @@ deploy:
   provider: script
   skip_cleanup: true
   script: bash -c '
-    rsync ./{docker-compose.yml,nginx.conf,.env} $SSH_USER@$SSH_HOST:$APP_PATH/
+    rsync ./{docker-compose.yml,nginx.conf,.env.enc} $SSH_USER@$SSH_HOST:$APP_PATH/
     && ssh root@$SSH_HOST "systemctl restart coffee-print"'
   on:
     branch: master
