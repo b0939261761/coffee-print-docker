@@ -1,4 +1,2 @@
-/letsencrypt
-
 .env
 .travis/id_rsa
