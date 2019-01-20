@@ -231,3 +231,14 @@ touch .travis.yml && travis encrypt-file ./.travis/id_rsa ./.travis/id_rsa.enc -
 # If *.travis.yml* is not add decrypt command or variable in travis, you run command
 travis login --org
 ```
+
+## Git. Add hook pre-commit for crypted .env file
+
+./.git/hooks/pre-commit
+
+```bash
+#!/bin/sh
+
+openssl aes-256-cbc -k "<key>" -in .env -out .env.enc
+echo "pre-commit - File '.env.enc' done"
+```
