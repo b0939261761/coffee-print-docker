@@ -21,7 +21,7 @@ before_install:
   - ssh-add ./.travis/id_rsa
   - openssl aes-256-cbc -k $env_file_key -in ./.env.enc -out ./.env -d
 
-install: false
+install: true
 
 script:
   - echo "npm test temporarily disabled"
