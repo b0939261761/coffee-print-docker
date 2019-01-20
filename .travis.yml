@@ -26,6 +26,9 @@ install: true
 script:
   - echo "npm test temporarily disabled"
 
+# файл закодированный в openssl в Windows travis не может расшифровать, поэтому
+# производим расшифровку на сервере
+
 deploy:
   provider: script
   skip_cleanup: true

@@ -206,12 +206,15 @@ git push origin --force
 ## SSH public-key authentication
 
 ```bash
+# Create a new SSH Key
+ssh-keygen -t rsa -b 4096 -C "TravisCIDeployKey"
+
 sudo chown root:root -R /root
 sudo chmod 700 ~/.ssh/
 sudo chmod 600 ~/.ssh/authorized_keys
 ```
 
-Travis SSH deploy only **LINUX**
+## Travis SSH deploy only **LINUX**
 
 [https://oncletom.io/2016/travis-ssh-deploy/](https://oncletom.io/2016/travis-ssh-deploy/)
 
@@ -219,20 +222,12 @@ Travis SSH deploy only **LINUX**
 
 [https://github.com/dwyl/learn-travis/blob/master/encrypted-ssh-keys-deployment.md](https://github.com/dwyl/learn-travis/blob/master/encrypted-ssh-keys-deployment.md)
 
-### Create a new SSH Key
+Все действия производит только на *LINUX*!
 
 ```bash
-ssh-keygen -t rsa -b 4096 -C "TravisCIDeployKey"
-```
-
-### Encrypt file
-
-```bash
+# Encrypt file
 touch .travis.yml && travis encrypt-file ./.travis/id_rsa ./.travis/id_rsa.enc --add
-```
 
-If *.travis.yml* is not add decrypt command, you run command
-
-```bash
+# If *.travis.yml* is not add decrypt command or variable in travis, you run command
 travis login --org
 ```
