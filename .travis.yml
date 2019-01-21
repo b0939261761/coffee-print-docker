@@ -33,9 +33,8 @@ deploy:
   provider: script
   skip_cleanup: true
   script: bash -c '
-    rsync ./{docker-compose.yml,nginx.conf,.env.enc} $SSH_USER@$SSH_HOST:$APP_PATH/
+    rsync ./{docker-compose.yml,nginx.conf} $SSH_USER@$SSH_HOST:$APP_PATH/
     && ssh $SSH_USER@$SSH_HOST "
-      openssl aes-256-cbc -k $env_file_key -in $APP_PATH/.env.enc -out $APP_PATH/.env -d
       && rm -rf $APP_PATH/.env.enc
       && systemctl restart $SERVICE_NAME"'
   on:
