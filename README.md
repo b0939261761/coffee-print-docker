@@ -243,4 +243,3 @@ git commit -am 'Bla-bla-bla'
 
 git push origin --force
 ```
-
