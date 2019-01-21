@@ -34,8 +34,6 @@ deploy:
   skip_cleanup: true
   script: bash -c '
     rsync ./{docker-compose.yml,nginx.conf} $SSH_USER@$SSH_HOST:$APP_PATH/
-    && ssh $SSH_USER@$SSH_HOST "
-      && rm -rf $APP_PATH/.env.enc
-      && systemctl restart $SERVICE_NAME"'
+    && ssh $SSH_USER@$SSH_HOST "systemctl restart $SERVICE_NAME"'
   on:
     branch: master
