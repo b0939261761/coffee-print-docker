@@ -91,6 +91,9 @@ docker system prune -a
 docker-compose build
 docker-compose run app bash -c 'cd $APP_DIR && npx sequelize db:migrate'
 docker-compose run app bash -c 'cd $APP_DIR && && npx sequelize db:seed:all'
+
+# Revert migration
+docker-compose run app bash -c 'cd $APP_DIR && npx sequelize db:migrate:undo'
 ```
 
 ## Additional command
