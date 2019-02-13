@@ -33,6 +33,7 @@ services:
       - app
     volumes:
       - ./../coffee-print-client:/var/www/site
+      - ./coffee-print.apk:/var/www/upgrade/
       - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
       - ./certbot/conf:/etc/letsencrypt
       - ./certbot/www:/var/www/certbot
