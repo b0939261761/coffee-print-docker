@@ -78,7 +78,7 @@ docker rm $(docker ps -a -q)
 # Delete all network
 docker network rm $(docker network ls --quiet)
 # Delete all images
-docker rmi $(docker images -q)
+docker rmi -f $(docker images -q)
 # Remove all system volumes
 docker volume rm $(docker volume ls -q)
 # Remove all images, network, containers
