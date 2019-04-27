@@ -1,7 +1,7 @@
 version: '3.7'
 services:
   app:
-    image: node:11.10.0
+    image: node:10.15.3
     command: >
       bash -c "
       cd $APP_DIR
@@ -28,7 +28,7 @@ services:
       POSTGRES_PORT: $POSTGRES_PORT
 
   nginx:
-    image: nginx:1.15.9-alpine
+    image: nginx:1.6.0-alpine
     depends_on:
       - app
     volumes:
