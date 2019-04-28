@@ -28,7 +28,19 @@ services:
       POSTGRES_PORT: $POSTGRES_PORT
 
   nginx:
-    image: nginx:1.16.0-alpine
+    image: nginx:1.16.0-alpinesudo docker run \
+  --rm \
+  --name certbot \
+  --volume "$(pwd)/certbot/conf:/etc/letsencrypt" \
+  --volume "$(pwd)/certbot/www:/var/www/certbot" \
+  certbot/certbot certonly \
+  --non-interactive \
+  --webroot \
+  --agree-tos \
+  --manual-public-ip-logging-ok \
+  --domains whimsy.cf \
+  --email b360124@gmail.com \
+  --webroot-path /var/www/certbot
     depends_on:
       - app
     volumes:
