@@ -233,6 +233,7 @@ sudo docker run \
   certbot/dns-cloudflare certonly \
   --manual-public-ip-logging-ok \
   --agree-tos \
+  --domains *.domain.name \
   --domains domain.name \
   --email example@example.com \
   --server https://acme-v02.api.letsencrypt.org/directory \

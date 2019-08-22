@@ -1,7 +1,7 @@
 version: '3.7'
 services:
   server:
-    image: node:10.16.0
+    image: node:10.16.3
     command: >
       bash -c "
       cd $APP_DIR
@@ -16,7 +16,7 @@ services:
       - db
 
   account-server:
-    image: node:10.16.0
+    image: node:10.16.3
     command: >
       bash -c "
       cd $APP_DIR
@@ -31,7 +31,7 @@ services:
       - account-server-db
 
   db:
-    image: postgres:11.4-alpine
+    image: postgres:11.5-alpine
     ports:
       - $POSTGRES_PORT:$POSTGRES_PORT
     volumes:
@@ -43,7 +43,7 @@ services:
       POSTGRES_PORT: $POSTGRES_PORT
 
   account-server-db:
-    image: postgres:11.4-alpine
+    image: postgres:11.5-alpine
     ports:
       - 5433:$ACCOUNT_SERVER_POSTGRES_PORT
     volumes:
@@ -55,7 +55,7 @@ services:
       POSTGRES_PORT: $ACCOUNT_SERVER_POSTGRES_PORT
 
   nginx:
-    image: nginx:1.17.1-alpine
+    image: nginx:1.17.3-alpine
     depends_on:
       - server
       - account-server
