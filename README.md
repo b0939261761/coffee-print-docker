@@ -217,8 +217,8 @@ sudo docker run \
 sudo docker run \
   --rm \
   --name certbot \
-  --volume "/root/coffee-print/coffee-print-docker/certbot/conf:/etc/letsencrypt" \
-  --volume "/root/coffee-print/coffee-print-docker/certbot/www:/var/www/certbot" \
+  --volume "$(pwd)/certbot/conf:/etc/letsencrypt" \
+  --volume "$(pwd)/certbot/www:/var/www/certbot" \
   certbot/certbot renew
 
 # Add wildcard certificate
@@ -239,6 +239,19 @@ sudo docker run \
   --server https://acme-v02.api.letsencrypt.org/directory \
   --dns-cloudflare \
   --dns-cloudflare-credentials /root/.secrets/certbot/cloudflare.ini
+
+  # Update certificate
+sudo docker run \
+  --rm \
+  --name certbot \
+  --volume "$(pwd)/certbot/conf:/etc/letsencrypt" \
+  --volume "$(pwd)/certbot/www:/var/www/certbot" \
+  --volume "$(pwd)/cloudflare.ini:/root/.secrets/certbot/cloudflare.ini" \
+  certbot/certbot renew \
+    --server https://acme-v02.api.letsencrypt.org/directory \
+    --dns-cloudflare \
+    --dns-cloudflare-credentials /root/.secrets/certbot/cloudflare.ini
+
 ```
 
 ## Add to cron *certbot_renew.sh*. Readme inside file
