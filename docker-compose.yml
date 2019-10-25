@@ -31,7 +31,7 @@ services:
       - account-server-db
 
   db:
-    image: postgres:12.0-alpine
+    image: postgres:11.5-alpine
     ports:
       - $POSTGRES_PORT:$POSTGRES_PORT
     volumes:
@@ -43,7 +43,7 @@ services:
       POSTGRES_PORT: $POSTGRES_PORT
 
   account-server-db:
-    image: postgres:12.0-alpine
+    image: postgres:11.5-alpine
     ports:
       - 5433:$ACCOUNT_SERVER_POSTGRES_PORT
     volumes:
